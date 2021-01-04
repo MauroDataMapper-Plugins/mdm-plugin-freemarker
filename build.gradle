@@ -28,6 +28,7 @@ plugins {
     id 'jacoco'
 }
 
+
 apply plugin: "idea"
 apply plugin: "org.grails.grails-plugin"
 apply plugin: "org.grails.grails-plugin-publish"
@@ -37,6 +38,12 @@ apply plugin: "org.grails.plugins.views-markup"
 apply plugin: 'ox.softeng.ox-brc-base'
 apply plugin: 'ox.softeng.ox-brc-artifactory'
 apply plugin: "com.github.hierynomus.license"
+
+task staticCodeAnalysis() {
+    group 'reporting'
+    description = 'Catch task for all SCA tasks'
+    mustRunAfter integrationTest
+}
 
 repositories {
     mavenLocal()
