@@ -81,7 +81,7 @@ pipeline {
             }
         }
 
-        stage('Static Code Analysis') {
+/*        stage('Static Code Analysis') {
             steps {
                 sh "./gradlew -PciRun=true staticCodeAnalysis"
             }
@@ -103,7 +103,7 @@ pipeline {
                 }
             }
         }
-
+*/
         stage('License Header Check'){
             steps{
                 sh './gradlew license'
