@@ -23,6 +23,11 @@ buildscript {
     }
 }
 
+plugins {
+    id 'project-report'
+    id 'jacoco'
+}
+
 apply plugin: "idea"
 apply plugin: "org.grails.grails-plugin"
 apply plugin: "org.grails.grails-plugin-publish"
