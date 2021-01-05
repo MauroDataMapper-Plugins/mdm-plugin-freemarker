@@ -61,26 +61,6 @@ pipeline {
             }
         }
 
-        stage('Jacoco Report') {
-            steps {
-                sh "./gradlew jacocoTestReport"
-            }
-            post {
-                always {
-                    jacoco execPattern: '**/build/jacoco/*.exec'
-                    publishHTML([
-                            allowMissing         : false,
-                            alwaysLinkToLastBuild: true,
-                            keepAll              : true,
-                            reportDir            : 'build/reports/jacoco/test/html',
-                            reportFiles          : 'index.html',
-                            reportName           : 'Coverage Report (Gradle)',
-                            reportTitles         : 'Jacoco Coverage'
-                    ])
-                }
-            }
-        }
-
         stage('License Header Check'){
             steps{
                 sh './gradlew license'
