@@ -32,7 +32,7 @@ import static io.micronaut.http.HttpStatus.OK
 
 @Slf4j
 @Integration
-class FreemarkerControllerSpec extends BaseFunctionalSpec {
+class FreemarkerFunctionalSpec extends BaseFunctionalSpec {
 
     def setup() {
     }
