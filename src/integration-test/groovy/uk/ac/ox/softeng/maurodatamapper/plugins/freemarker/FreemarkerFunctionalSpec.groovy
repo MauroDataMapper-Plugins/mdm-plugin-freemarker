@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 University of Oxford
+ * Copyright 2020 University of Oxford and Health and Social Care Information Centre, also known as NHS Digital
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -32,7 +32,7 @@ import static io.micronaut.http.HttpStatus.OK
 
 @Slf4j
 @Integration
-class FreemarkerControllerSpec extends BaseFunctionalSpec {
+class FreemarkerFunctionalSpec extends BaseFunctionalSpec {
 
     def setup() {
     }

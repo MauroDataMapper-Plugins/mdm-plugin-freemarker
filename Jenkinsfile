@@ -1,12 +1,17 @@
 pipeline {
     agent any
 
+    environment {
+        JENKINS = 'true'
+    }
+
     tools {
         jdk 'jdk-12'
     }
 
     options {
         timestamps()
+        timeout(time: 30, unit: 'MINUTES')
         skipStagesAfterUnstable()
         buildDiscarder(logRotator(numToKeepStr: '30'))
     }
@@ -25,45 +30,47 @@ pipeline {
             }
         }
 
-        stage('Compile') {
+        stage('Info') {
             steps {
                 sh './gradlew -v' // Output gradle version for verification checks
-                sh "./gradlew jenkinsClean compile"
+                sh './gradlew jvmArgs sysProps'
+                sh './grailsw -v' // Output grails version for verification checks
             }
         }
 
-        stage('Integration Test') {
+        stage('Test cleanup & Compile') {
             steps {
-                script {
-                    def outputTestFolder = uk.ac.ox.ndm.jenkins.Utils.generateRandomTestFolder()
-                    def port = uk.ac.ox.ndm.jenkins.Utils.findFreeTcpPort()
+                sh "./gradlew jenkinsClean"
+                sh './gradlew compile'
+            }
+        }
 
-                    sh "./gradlew " +
-                       "-Dhibernate.search.default.indexBase=${outputTestFolder} " +
-                       "-Dserver.port=${port} " +
-                       "integrationTest"
+        stage('License Header Check') {
+            steps {
+                warnError('Missing License Headers') {
+                    sh './gradlew --build-cache license'
                 }
+            }
+        }
+
+        stage('Functional Test') {
+
+            steps {
+                sh "./grailsw test-app -integration"
             }
             post {
                 always {
+                    junit allowEmptyResults: true, testResults: 'build/test-results/integrationTest/*.xml'
                     publishHTML([
-                            allowMissing         : false,
-                            alwaysLinkToLastBuild: true,
-                            keepAll              : true,
-                            reportDir            : 'build/reports/tests',
-                            reportFiles          : 'index.html',
-                            reportName           : 'Integration Test Report',
-                            reportTitles         : 'Test'
+                        allowMissing         : false,
+                        alwaysLinkToLastBuild: true,
+                        keepAll              : true,
+                        reportDir            : 'build/reports/tests',
+                        reportFiles          : 'index.html',
+                        reportName           : 'Test Report',
+                        reportTitles         : 'Test'
                     ])
-                    junit allowEmptyResults: true, testResults: '**/build/test-results/**/*.xml'
-                    outputTestResults()
                 }
-            }
-        }
-
-        stage('License Header Check'){
-            steps{
-                sh './gradlew license'
             }
         }
 
@@ -71,7 +78,7 @@ pipeline {
             when {
                 allOf {
                     anyOf {
-                        branch 'master'
+                       branch 'main'
                         branch 'develop'
                     }
                     expression {
@@ -90,6 +97,9 @@ pipeline {
 
     post {
         always {
+            outputTestResults()
+            jacoco execPattern: '**/build/jacoco/*.exec'
+            archiveArtifacts allowEmptyArchive: true, artifacts: '**/*.log'
             slackNotification()
         }
     }

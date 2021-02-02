@@ -28,7 +28,6 @@ plugins {
     id 'jacoco'
 }
 
-
 apply plugin: "idea"
 apply plugin: "org.grails.grails-plugin"
 apply plugin: "org.grails.grails-plugin-publish"
@@ -39,11 +38,6 @@ apply plugin: 'ox.softeng.ox-brc-base'
 apply plugin: 'ox.softeng.ox-brc-artifactory'
 apply plugin: "com.github.hierynomus.license"
 
-task staticCodeAnalysis() {
-    group 'reporting'
-    description = 'Catch task for all SCA tasks'
-    mustRunAfter integrationTest
-}
 
 repositories {
     mavenLocal()
@@ -109,6 +103,7 @@ dependencies {
     testCompile "org.mockito:mockito-core"
     testCompile "io.micronaut:micronaut-http-client"
     testCompile "org.grails:grails-web-testing-support"
+    testCompile "org.grails:views-json-testing-support"
     //testCompile "org.grails:grails-plugin-testing"
     testCompile "io.micronaut:micronaut-http-client"
 }
@@ -139,7 +134,7 @@ grailsPublish {
     }
     title = "Mauro Data Mapper Freemarker Plugin"
     desc = '''Additional endpoints to provide basic Apache Freemarker templating functionality for the Mauro Data Mapper back-end.'''
-    developers = [jameswelch: "James Welch",]
+    developers = [olliefreeman: 'Oliver Freeman', jameswelch: "James Welch",]
     //issueTrackerUrl = 'https://maurodatamapper.myjetbrains.com' TODO
 }
 
@@ -147,24 +142,10 @@ grailsPublish {
 grails {
     plugins {
         compile group: 'uk.ac.ox.softeng.maurodatamapper', name: 'mdm-core', version: mdmCoreVersion
-        compile group: 'uk.ac.ox.softeng.maurodatamapper', name: 'mdm-plugin-datamodel', version: mdmPluginDataModelVersion
+        compile group: 'uk.ac.ox.softeng.maurodatamapper', name: 'mdm-plugin-datamodel', version: mdmCoreVersion
     }
 }
 
 apply from: 'dependencies.gradle'
-apply from: "${rootDir}/gradle/additions/grails.gradle"
-
-license {
-    header = file("${rootDir}/NOTICE")
-    excludes([
-        '**/*.gson',
-        '**/*.yml',
-        '**/META-INF/**',
-        '**/*.txt',
-        '**/*.json',
-        '**/*.gml',
-        '**/*.jpeg',
-        '**/*.png',
-        '**/*.xml'
-    ])
-}
+apply from: "${projectDir}/gradle/additions/mdm.gradle"
+apply from: "${projectDir}/gradle/additions/grails.gradle"
