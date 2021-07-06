@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 University of Oxford and Health and Social Care Information Centre, also known as NHS Digital
+ * Copyright 2020-2021 University of Oxford and Health and Social Care Information Centre, also known as NHS Digital
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -28,6 +28,12 @@ class FreemarkerController implements ResourcelessMdmController {
 
         String output = freemarkerService.template(params.catalogueItemDomainType, params.catalogueItemId, request.reader.text)
         render(text: output, contentType: "text/plain", encoding: "UTF-8")
+    }
+
+    def templateDiff() {
+        String output = freemarkerService.templateDiff(params.catalogueItemDomainType, params.modelId, params.otherModelId, request.reader.text)
+        render(text: output, contentType: "text/plain", encoding: "UTF-8")
+
     }
 
 }

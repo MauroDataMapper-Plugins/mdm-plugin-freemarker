@@ -34,8 +34,7 @@ apply plugin: "org.grails.grails-plugin-publish"
 apply plugin: "org.grails.plugins.views-json"
 apply plugin: "org.grails.plugins.views-markup"
 
-apply plugin: 'ox.softeng.ox-brc-base'
-apply plugin: 'ox.softeng.ox-brc-artifactory'
+apply plugin: 'ox.softeng.grails'
 apply plugin: "com.github.hierynomus.license"
 
 
@@ -143,9 +142,13 @@ grails {
     plugins {
         compile group: 'uk.ac.ox.softeng.maurodatamapper', name: 'mdm-core', version: mdmCoreVersion
         compile group: 'uk.ac.ox.softeng.maurodatamapper', name: 'mdm-plugin-datamodel', version: mdmCoreVersion
+        compile group: 'uk.ac.ox.softeng.maurodatamapper', name: 'mdm-plugin-terminology', version: mdmCoreVersion
+        compile group: 'uk.ac.ox.softeng.maurodatamapper', name: 'mdm-plugin-referencedata', version: mdmCoreVersion
+        compile group: 'uk.ac.ox.softeng.maurodatamapper', name: 'mdm-plugin-dataflow', version: mdmCoreVersion
+        compile group: 'uk.ac.ox.softeng.maurodatamapper', name: 'mdm-plugin-datamodel', version: mdmCoreVersion
     }
 }
 
 apply from: 'dependencies.gradle'
 apply from: "${projectDir}/gradle/additions/mdm.gradle"
-apply from: "${projectDir}/gradle/additions/grails.gradle"
+apply from: "${projectDir}/gradle/additions/staticCodeAnalysis.gradle"

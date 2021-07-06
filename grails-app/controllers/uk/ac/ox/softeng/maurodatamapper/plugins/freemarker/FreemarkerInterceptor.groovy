@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 University of Oxford and Health and Social Care Information Centre, also known as NHS Digital
+ * Copyright 2020-2021 University of Oxford and Health and Social Care Information Centre, also known as NHS Digital
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -22,7 +22,7 @@ import uk.ac.ox.softeng.maurodatamapper.core.traits.controller.MdmInterceptor
 class FreemarkerInterceptor implements MdmInterceptor {
 
     boolean before() {
-        if (actionName in ['template']) {
+        if (actionName in ['template', 'templateDiff']) {
             return currentUserSecurityPolicyManager.isApplicationAdministrator() ?: forbiddenDueToNotApplicationAdministrator()
         }
         return false
