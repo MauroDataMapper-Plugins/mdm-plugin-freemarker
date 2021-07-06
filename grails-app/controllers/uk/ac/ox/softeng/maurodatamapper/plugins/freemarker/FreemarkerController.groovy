@@ -30,4 +30,10 @@ class FreemarkerController implements ResourcelessMdmController {
         render(text: output, contentType: "text/plain", encoding: "UTF-8")
     }
 
+    def templateDiff() {
+        String output = freemarkerService.templateDiff(params.catalogueItemDomainType, params.modelId, params.otherModelId, request.reader.text)
+        render(text: output, contentType: "text/plain", encoding: "UTF-8")
+
+    }
+
 }

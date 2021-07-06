@@ -22,7 +22,7 @@ import uk.ac.ox.softeng.maurodatamapper.core.traits.controller.MdmInterceptor
 class FreemarkerInterceptor implements MdmInterceptor {
 
     boolean before() {
-        if (actionName in ['template']) {
+        if (actionName in ['template', 'templateDiff']) {
             return currentUserSecurityPolicyManager.isApplicationAdministrator() ?: forbiddenDueToNotApplicationAdministrator()
         }
         return false

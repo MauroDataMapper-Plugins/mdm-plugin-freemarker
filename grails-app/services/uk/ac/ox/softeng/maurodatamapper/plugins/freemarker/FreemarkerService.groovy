@@ -18,8 +18,13 @@
 package uk.ac.ox.softeng.maurodatamapper.plugins.freemarker
 
 import uk.ac.ox.softeng.maurodatamapper.api.exception.ApiBadRequestException
+import uk.ac.ox.softeng.maurodatamapper.core.controller.ModelController
 import uk.ac.ox.softeng.maurodatamapper.core.model.CatalogueItem
 import uk.ac.ox.softeng.maurodatamapper.core.model.CatalogueItemService
+import uk.ac.ox.softeng.maurodatamapper.core.model.Model
+import uk.ac.ox.softeng.maurodatamapper.core.model.ModelService
+import uk.ac.ox.softeng.maurodatamapper.core.model.facet.MultiFacetAware
+import uk.ac.ox.softeng.maurodatamapper.core.traits.service.MultiFacetAwareService
 
 import freemarker.cache.StringTemplateLoader
 import freemarker.template.Configuration
@@ -30,18 +35,17 @@ import org.springframework.beans.factory.annotation.Autowired
 @Transactional
 class FreemarkerService {
 
-    @Autowired(required = false)
-    List<CatalogueItemService> catalogueItemServices
-
+    @Autowired
+    List<MultiFacetAwareService> multiFacetAwareServices
 
     String template(String domainType, String catalogueItemId, String template) {
-        CatalogueItemService catalogueItemService = catalogueItemServices.find {
+        MultiFacetAwareService multiFacetAwareService = multiFacetAwareServices.find {
             it.handles(domainType)
         }
-        if(!catalogueItemService) {
+        if(!multiFacetAwareService) {
             throw new ApiBadRequestException('TMP01', "No supporting service for domainType ${domainType}")
         }
-        CatalogueItem catalogueItem = catalogueItemService.get(catalogueItemId)
+        CatalogueItem catalogueItem = multiFacetAwareService.get(catalogueItemId)
         if(!catalogueItem) {
             throw new ApiBadRequestException('TMP02', "Cannot find item of type: ${domainType} with id: ${catalogueItemId}")
         }
@@ -50,6 +54,33 @@ class FreemarkerService {
         String output = processTemplate(map, template)
         return output
     }
+
+    String templateDiff(String domainType, String modelId, String otherModelId, String template) {
+
+        ModelService modelService = (ModelService) multiFacetAwareServices.find {
+            it instanceof ModelService && it.handles(domainType)
+        }
+        if(!modelService) {
+            throw new ApiBadRequestException('TMP01', "No supporting service for domainType ${domainType}")
+        }
+
+        Model sourceModel = (Model) modelService.get(modelId)
+        Model targetModel = (Model) modelService.get(otherModelId)
+
+        if(!sourceModel) {
+            throw new ApiBadRequestException('TMP02', "Cannot find source model with id: ${modelId}")
+        }
+        if(!targetModel) {
+            throw new ApiBadRequestException('TMP02', "Cannot find target model with id: ${otherModelId}")
+        }
+        Map<String, Object> map = [:]
+        map["sourceModel"] = sourceModel
+        map["targetModel"] = targetModel
+        map["diff"] = modelService.getDiffForModels(sourceModel, targetModel)
+        String output = processTemplate(map, template)
+        return output
+    }
+
 
     static String processTemplate(Map map, String templateContents) {
         Writer outputWriter = new StringWriter()

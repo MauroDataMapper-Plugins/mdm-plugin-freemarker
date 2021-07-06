@@ -21,9 +21,8 @@ class UrlMappings {
 
     static mappings = {
         group '/api', {
-
             post "/${catalogueItemDomainType}/${catalogueItemId}/template" (controller: 'freemarker', action: 'template')
-
+            post "/${catalogueItemDomainType}/${modelId}/diff/${otherModelId}/template" (controller: 'freemarker', action: 'templateDiff')
         }
     }
 }
