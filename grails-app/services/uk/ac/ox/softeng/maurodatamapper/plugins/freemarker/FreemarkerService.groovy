@@ -18,19 +18,15 @@
 package uk.ac.ox.softeng.maurodatamapper.plugins.freemarker
 
 import uk.ac.ox.softeng.maurodatamapper.api.exception.ApiBadRequestException
-import uk.ac.ox.softeng.maurodatamapper.core.controller.ModelController
 import uk.ac.ox.softeng.maurodatamapper.core.model.CatalogueItem
-import uk.ac.ox.softeng.maurodatamapper.core.model.CatalogueItemService
 import uk.ac.ox.softeng.maurodatamapper.core.model.Model
 import uk.ac.ox.softeng.maurodatamapper.core.model.ModelService
-import uk.ac.ox.softeng.maurodatamapper.core.model.facet.MultiFacetAware
 import uk.ac.ox.softeng.maurodatamapper.core.traits.service.MultiFacetAwareService
 
 import freemarker.cache.StringTemplateLoader
 import freemarker.template.Configuration
 import grails.gorm.transactions.Transactional
 import org.springframework.beans.factory.annotation.Autowired
-
 
 @Transactional
 class FreemarkerService {
