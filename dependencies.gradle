@@ -5,7 +5,7 @@ dependencies {
     }
 
     // https://mvnrepository.com/artifact/org.freemarker/freemarker
-    implementation group: 'org.freemarker', name: 'freemarker', version: '2.3.30'
+    implementation group: 'org.freemarker', name: 'freemarker', version: '2.3.31'
 
     // Postgres database
     runtimeOnly "org.hibernate:hibernate-jcache"
