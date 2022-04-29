@@ -44,7 +44,7 @@ class BootStrap {
                     Folder folder = Folder.findByLabel('Functional Test Folder')
                     if(!folder)
                     {
-                        folder = new Folder(label: 'Functional Test Folder', createdBy: StandardEmailAddress.getFUNCTIONAL_TEST())
+                        folder = new Folder(label: 'Functional Test Folder', createdBy: StandardEmailAddress.FUNCTIONAL_TEST)
                         checkAndSave(messageSource, folder)
                     }
                     Authority authority = authorityService.getDefaultAuthority()
